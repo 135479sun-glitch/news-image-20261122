@@ -4,9 +4,12 @@
 Reads news.json next to this script and writes /output/entry.png
 (or $MAKEFUN_OUTPUT_PATH). Deterministic: fixed geometry, fixed fonts,
 no clock, no randomness, no network. Each story card carries a picture
-panel drawn procedurally with Pillow (no image assets) above its
-tag, headline and summary. If Pillow cannot be imported, the bundled
+panel drawn procedurally with Pillow (no image assets) above its tag,
+headline and summary. If Pillow cannot be imported, the bundled
 entry.png is copied to the output path instead.
+
+The six stories are a mixed set — climate, conflict, politics, power,
+space and sport — with only one war story, per the reader's request.
 """
 
 import json
@@ -34,11 +37,11 @@ SANS_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 # One accent colour per story, in news.json order.
 ACCENTS = [
     (217, 164, 65),   # COP31: gold
-    (198, 91, 78),    # warship: red
-    (91, 141, 201),   # House: blue
     (95, 168, 107),   # Bahrain: green
+    (91, 141, 201),   # House: blue
+    (198, 91, 78),    # Asia Power: red
     (142, 124, 195),  # Mercury: purple
-    (217, 123, 63),   # Dymer: orange
+    (217, 123, 63),   # Sport: orange
 ]
 
 
@@ -110,36 +113,56 @@ def scene_cop31(draw, x, y, w, h):
         draw.rectangle([x + bx, y + 92 - bh, x + bx + 14, y + 92], fill=(36, 26, 51))
 
 
-def scene_warship(draw, x, y, w, h):
-    """Sea drones sink a warship at night."""
-    sky(draw, x, y, w, h, (16, 32, 54), (24, 52, 84))
-    stars(draw, x, y, [(30, 14, 2), (90, 22, 1), (150, 10, 2), (240, 16, 1),
-                       (330, 12, 2), (400, 24, 1), (60, 34, 1), (420, 40, 2)], (220, 228, 238))
-    # sea
-    draw.rectangle([x, y + 74, x + w, y + h], fill=(15, 36, 56))
-    for wy, segs in ((82, (20, 70, 150, 260, 340)), (92, (50, 120, 210, 300, 390)),
-                     (102, (10, 90, 180, 270, 360))):
-        for sx in segs:
-            draw.line([x + sx, y + wy, x + sx + 26, y + wy], fill=(120, 160, 190), width=2)
-    # warship hull, deck, funnel, mast
-    draw.polygon([(x + 118, y + 74), (x + 332, y + 74), (x + 312, y + 56),
-                  (x + 148, y + 56)], fill=(107, 118, 134))
-    draw.rectangle([x + 182, y + 44, x + 282, y + 56], fill=(126, 136, 152))
-    draw.rectangle([x + 232, y + 32, x + 254, y + 44], fill=(90, 100, 114))
-    draw.line([x + 202, y + 18, x + 202, y + 44], fill=(138, 148, 164), width=3)
-    draw.ellipse([x + 197, y + 12, x + 207, y + 22], fill=(138, 148, 164))
-    # explosion and smoke
-    draw.ellipse([x + 288, y + 26, x + 318, y + 56], fill=(240, 138, 36))
-    draw.ellipse([x + 296, y + 34, x + 310, y + 48], fill=(245, 197, 66))
-    draw.ellipse([x + 306, y + 8, x + 322, y + 24], fill=(138, 138, 138))
-    draw.ellipse([x + 322, y + 2, x + 334, y + 14], fill=(154, 154, 154))
-    # drone boats with wakes
-    for dx, dy in ((52, 80), (378, 86)):
-        draw.polygon([(x + dx, y + dy), (x + dx + 26, y + dy),
-                      (x + dx + 20, y + dy + 7), (x + dx + 6, y + dy + 7)],
-                     fill=(40, 52, 66))
-        draw.line([x + dx - 22, y + dy + 3, x + dx - 4, y + dy + 3],
-                  fill=(190, 210, 225), width=2)
+def scene_bahrain(draw, x, y, w, h):
+    """Coastal refinery at night, flare burning, tankers in the Gulf."""
+    sky(draw, x, y, w, h, (10, 16, 32), (24, 34, 60))
+    # crescent moon
+    draw.ellipse([x + 396, y + 10, x + 428, y + 42], fill=(232, 228, 210))
+    draw.ellipse([x + 406, y + 6, x + 438, y + 38], fill=(24, 34, 60))
+    # shore, then a strip of sea along the bottom
+    draw.rectangle([x, y + 94, x + w, y + 100], fill=(10, 18, 32))
+    draw.rectangle([x, y + 100, x + w, y + h], fill=(14, 32, 52))
+    # distillation towers
+    draw.polygon([(x + 80, y + 26), (x + 95, y + 12), (x + 110, y + 26)],
+                 fill=(30, 42, 58))
+    draw.rectangle([x + 80, y + 26, x + 110, y + 94], fill=(30, 42, 58))
+    draw.rectangle([x + 130, y + 40, x + 152, y + 94], fill=(30, 42, 58))
+    draw.polygon([(x + 130, y + 40), (x + 141, y + 30), (x + 152, y + 40)],
+                 fill=(30, 42, 58))
+    for wy in (48, 62, 76):
+        draw.rectangle([x + 86, y + wy, x + 92, y + wy + 4], fill=(232, 163, 61))
+    # storage tanks
+    draw.rounded_rectangle([x + 180, y + 66, x + 240, y + 94], radius=6, fill=(36, 52, 74))
+    draw.rounded_rectangle([x + 258, y + 70, x + 308, y + 94], radius=6, fill=(36, 52, 74))
+    draw.line([x + 180, y + 70, x + 240, y + 70], fill=(90, 110, 132), width=2)
+    draw.line([x + 258, y + 74, x + 308, y + 74], fill=(90, 110, 132), width=2)
+    # flare stack with flame
+    draw.rectangle([x + 348, y + 30, x + 356, y + 94], fill=(30, 42, 58))
+    draw.polygon([(x + 342, y + 30), (x + 352, y + 4), (x + 362, y + 30)],
+                 fill=(240, 138, 36))
+    draw.polygon([(x + 347, y + 30), (x + 352, y + 14), (x + 357, y + 30)],
+                 fill=(245, 197, 66))
+    draw.ellipse([x + 347, y + 18, x + 357, y + 28], fill=(245, 197, 66))
+    # pipe run and smoke
+    draw.line([x + 110, y + 88, x + 348, y + 88], fill=(52, 66, 86), width=3)
+    draw.ellipse([x + 118, y + 22, x + 132, y + 36], fill=(120, 124, 130))
+    draw.ellipse([x + 128, y + 12, x + 140, y + 24], fill=(136, 140, 146))
+    # two tanker silhouettes on the sea, light slate so they read
+    for tx in (24, 368):
+        draw.polygon([(x + tx, y + 97), (x + tx + 52, y + 97),
+                      (x + tx + 46, y + 107), (x + tx + 6, y + 107)],
+                     fill=(58, 76, 98))
+        draw.line([x + tx, y + 97, x + tx + 52, y + 97],
+                  fill=(140, 160, 180), width=1)
+        draw.rectangle([x + tx + 34, y + 90, x + tx + 44, y + 97],
+                       fill=(58, 76, 98))
+        draw.ellipse([x + tx + 37, y + 87, x + tx + 41, y + 91],
+                     fill=(232, 163, 61))
+        draw.line([x + tx - 12, y + 105, x + tx + 2, y + 105],
+                  fill=(90, 120, 150), width=1)
+    for wx in (120, 200, 280):
+        draw.line([x + wx, y + 104, x + wx + 18, y + 104],
+                  fill=(90, 120, 150), width=1)
 
 
 def scene_capitol(draw, x, y, w, h):
@@ -162,38 +185,34 @@ def scene_capitol(draw, x, y, w, h):
     draw.rectangle([x + 150, y + 88, x + 300, y + 96], fill=(232, 228, 216))
 
 
-def scene_bahrain(draw, x, y, w, h):
-    """Industrial refinery at night, flare burning."""
-    sky(draw, x, y, w, h, (10, 16, 32), (24, 34, 60))
-    # crescent moon
-    draw.ellipse([x + 396, y + 10, x + 428, y + 42], fill=(232, 228, 210))
-    draw.ellipse([x + 406, y + 6, x + 438, y + 38], fill=(24, 34, 60))
-    draw.rectangle([x, y + 94, x + w, y + h], fill=(10, 18, 32))
-    # distillation towers
-    draw.polygon([(x + 80, y + 26), (x + 95, y + 12), (x + 110, y + 26)],
-                 fill=(30, 42, 58))
-    draw.rectangle([x + 80, y + 26, x + 110, y + 94], fill=(30, 42, 58))
-    draw.rectangle([x + 130, y + 40, x + 152, y + 94], fill=(30, 42, 58))
-    draw.polygon([(x + 130, y + 40), (x + 141, y + 30), (x + 152, y + 40)],
-                 fill=(30, 42, 58))
-    for wy in (48, 62, 76):
-        draw.rectangle([x + 86, y + wy, x + 92, y + wy + 4], fill=(232, 163, 61))
-    # storage tanks
-    draw.rounded_rectangle([x + 180, y + 66, x + 240, y + 94], radius=6, fill=(36, 52, 74))
-    draw.rounded_rectangle([x + 258, y + 70, x + 308, y + 94], radius=6, fill=(36, 52, 74))
-    draw.line([x + 180, y + 70, x + 240, y + 70], fill=(90, 110, 132), width=2)
-    draw.line([x + 258, y + 74, x + 308, y + 74], fill=(90, 110, 132), width=2)
-    # flare stack with flame
-    draw.rectangle([x + 348, y + 30, x + 356, y + 94], fill=(30, 42, 58))
-    draw.polygon([(x + 342, y + 30), (x + 352, y + 6), (x + 362, y + 30)],
-                 fill=(240, 138, 36))
-    draw.polygon([(x + 347, y + 30), (x + 352, y + 16), (x + 357, y + 30)],
-                 fill=(245, 197, 66))
-    draw.ellipse([x + 340, y + 2, x + 364, y + 26], fill=(240, 138, 36))
-    # pipe run and smoke
-    draw.line([x + 110, y + 88, x + 348, y + 88], fill=(52, 66, 86), width=3)
-    draw.ellipse([x + 118, y + 22, x + 132, y + 36], fill=(120, 124, 130))
-    draw.ellipse([x + 128, y + 12, x + 140, y + 24], fill=(136, 140, 146))
+def scene_chart(draw, x, y, w, h):
+    """Asia Power Index: two bars, US 78.9 ahead of China 73.6."""
+    draw.rectangle([x, y, x + w, y + h], fill=(16, 26, 44))
+    label_font = load_font(SANS_BOLD, 11)
+    # axis and gridlines
+    draw.line([x + 44, y + 16, x + 44, y + 94], fill=(60, 76, 100), width=2)
+    draw.line([x + 44, y + 94, x + w - 12, y + 94], fill=(60, 76, 100), width=2)
+    for gy in (34, 54, 74):
+        draw.line([x + 44, y + gy, x + w - 12, y + gy], fill=(34, 48, 68), width=1)
+    # dotted trend line sloping gently down
+    for dx in range(60, 400, 14):
+        ty = 30 + (dx - 60) * 8 // 340
+        draw.line([x + dx, y + ty, x + dx + 7, y + ty], fill=(201, 168, 106), width=2)
+    # bars: 78.9 -> 63px, 73.6 -> 59px
+    num_font = load_font(SANS_BOLD, 15)
+    name_font = load_font(SANS_BOLD, 12)
+    draw.rectangle([x + 150, y + 31, x + 205, y + 94], fill=(70, 110, 180))
+    draw.rectangle([x + 150, y + 31, x + 205, y + 37], fill=(110, 150, 210))
+    draw.rectangle([x + 255, y + 35, x + 310, y + 94], fill=(198, 91, 78))
+    draw.rectangle([x + 255, y + 35, x + 310, y + 41], fill=(224, 130, 116))
+    for bx, val, name in ((150, "78.9", "US"), (255, "73.6", "CN")):
+        vw = draw.textlength(val, font=num_font)
+        draw.text((x + bx + (55 - vw) / 2, y + 12), val, font=num_font,
+                  fill=(242, 237, 227))
+        nw = draw.textlength(name, font=name_font)
+        draw.text((x + bx + (55 - nw) / 2, y + 96), name, font=name_font,
+                  fill=(185, 194, 207))
+    draw.text((x + 330, y + 60), "gap 5.3", font=label_font, fill=(201, 168, 106))
 
 
 def scene_mercury(draw, x, y, w, h):
@@ -223,41 +242,61 @@ def scene_mercury(draw, x, y, w, h):
     draw.line([x + 328, y + 37, x + 328, y + 45], fill=(120, 160, 210), width=1)
 
 
-def scene_dymer(draw, x, y, w, h):
-    """Ruined apartment block at dawn, rescue crane beside it."""
-    sky(draw, x, y, w, h, (64, 58, 66), (214, 120, 62))
-    draw.ellipse([x + 330, y + 58, x + 370, y + 98], fill=(240, 190, 120))
-    draw.rectangle([x, y + 96, x + w, y + h], fill=(42, 35, 32))
-    # damaged block with jagged top
-    draw.polygon([(x + 70, y + 34), (x + 95, y + 20), (x + 120, y + 34),
-                  (x + 150, y + 16), (x + 180, y + 34), (x + 210, y + 26),
-                  (x + 210, y + 96), (x + 70, y + 96)], fill=(58, 54, 50))
-    lit = {(1, 1), (3, 2)}
-    for row in range(3):
-        for col in range(4):
-            wx = x + 82 + col * 32
-            wy = y + 44 + row * 18
-            fill = (232, 163, 61) if (col, row) in lit else (30, 27, 24)
-            draw.rectangle([wx, wy, wx + 12, wy + 10], fill=fill)
-    # smaller broken fragment
-    draw.polygon([(x + 228, y + 58), (x + 252, y + 46), (x + 272, y + 58),
-                  (x + 290, y + 52), (x + 290, y + 96), (x + 228, y + 96)],
-                 fill=(50, 46, 42))
-    # rubble mound
-    draw.polygon([(x + 60, y + 96), (x + 110, y + 82), (x + 160, y + 96)],
-                 fill=(42, 35, 32))
-    # rescue crane
-    draw.line([x + 330, y + 18, x + 330, y + 96], fill=(107, 90, 68), width=4)
-    draw.line([x + 330, y + 22, x + 412, y + 22], fill=(107, 90, 68), width=3)
-    draw.line([x + 392, y + 22, x + 392, y + 58], fill=(150, 138, 110), width=2)
-    draw.rectangle([x + 386, y + 58, x + 398, y + 66], fill=(180, 168, 140))
-    # smoke from the broken top
-    draw.ellipse([x + 130, y + 4, x + 146, y + 20], fill=(150, 146, 142))
-    draw.ellipse([x + 142, y - 2, x + 154, y + 10], fill=(164, 160, 156))
+def scene_sports(draw, x, y, w, h):
+    """Tennis on the left, motorsport on the right."""
+    mid = x + w // 2
+    # --- tennis half: green court, blue playing area, net, ball, trophy
+    draw.rectangle([x, y, mid, y + h], fill=(38, 96, 62))
+    draw.rectangle([x + 18, y + 16, mid - 18, y + 92], fill=(52, 110, 168))
+    draw.rectangle([x + 18, y + 16, mid - 18, y + 92], outline=(240, 240, 240), width=2)
+    draw.line([x + 18, y + 54, mid - 18, y + 54], fill=(240, 240, 240), width=2)
+    # net: vertical white band with mesh ticks
+    draw.rectangle([x + 104, y + 16, x + 120, y + 92], fill=(232, 232, 228))
+    for ny in range(20, 92, 8):
+        draw.line([x + 104, y + ny, x + 120, y + ny], fill=(160, 160, 156), width=1)
+    draw.line([x + 104, y + 16, x + 120, y + 16], fill=(242, 242, 238), width=3)
+    # tennis ball
+    draw.ellipse([x + 168, y + 24, x + 186, y + 42], fill=(214, 226, 63))
+    draw.arc([x + 168, y + 24, x + 186, y + 42], 300, 60, fill=(255, 255, 255), width=2)
+    # small gold trophy, bottom left of the court
+    draw.polygon([(x + 30, y + 66), (x + 52, y + 66), (x + 48, y + 80),
+                  (x + 34, y + 80)], fill=(232, 183, 70))
+    draw.arc([x + 24, y + 66, x + 34, y + 78], 90, 270, fill=(232, 183, 70), width=2)
+    draw.arc([x + 48, y + 66, x + 58, y + 78], 270, 90, fill=(232, 183, 70), width=2)
+    draw.rectangle([x + 38, y + 80, x + 44, y + 88], fill=(232, 183, 70))
+    draw.rectangle([x + 30, y + 88, x + 52, y + 92], fill=(232, 183, 70))
+    # --- motorsport half: asphalt, track curve, checkered flag, bike
+    draw.rectangle([mid, y, x + w, y + h], fill=(28, 28, 34))
+    draw.arc([mid + 10, y - 40, x + w + 60, y + 120], 40, 130,
+             fill=(200, 200, 205), width=6)
+    draw.arc([mid + 10, y - 40, x + w + 60, y + 120], 40, 130,
+             fill=(120, 120, 125), width=2)
+    # checkered flag on a pole, top right
+    fx, fy = x + w - 78, y + 10
+    draw.line([fx, fy + 4, fx, fy + 40], fill=(220, 220, 220), width=3)
+    for r in range(3):
+        for c in range(4):
+            fill = (20, 20, 20) if (r + c) % 2 == 0 else (240, 240, 240)
+            draw.rectangle([fx + 2 + c * 9, fy + r * 9, fx + 11 + c * 9, fy + 9 + r * 9],
+                           fill=fill)
+    # motorcycle silhouette: two wheels, frame, rider hint
+    wx1, wx2, wy = mid + 48, mid + 108, y + 78
+    draw.ellipse([wx1 - 11, wy - 11, wx1 + 11, wy + 11], outline=(210, 210, 215), width=3)
+    draw.ellipse([wx2 - 11, wy - 11, wx2 + 11, wy + 11], outline=(210, 210, 215), width=3)
+    draw.line([wx1, wy, mid + 78, wy - 16], fill=(210, 210, 215), width=3)
+    draw.line([mid + 78, wy - 16, wx2, wy], fill=(210, 210, 215), width=3)
+    draw.line([mid + 78, wy - 16, mid + 66, wy - 26], fill=(210, 210, 215), width=3)
+    draw.line([mid + 66, wy - 26, mid + 92, wy - 22], fill=(210, 210, 215), width=3)
+    draw.ellipse([mid + 88, wy - 34, mid + 100, wy - 22], fill=(240, 138, 36))
+    # speed lines behind the bike
+    for sx in (mid + 8, mid + 18, mid + 28):
+        draw.line([sx, wy + 4, sx + 16, wy + 4], fill=(140, 140, 148), width=2)
+    # divider between the two halves
+    draw.line([mid, y, mid, y + h], fill=(120, 128, 140), width=2)
 
 
-SCENES = [scene_cop31, scene_warship, scene_capitol,
-          scene_bahrain, scene_mercury, scene_dymer]
+SCENES = [scene_cop31, scene_bahrain, scene_capitol,
+          scene_chart, scene_mercury, scene_sports]
 
 
 def render():

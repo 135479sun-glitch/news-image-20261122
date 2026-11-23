@@ -9,13 +9,13 @@ A program that turns 22 November 2026's world news into one 1024×1024 image. Bu
 ## The six stories
 
 1. **COP31 collapses without a deal** — Nearly 200 nations fail to agree in Antalya as the EU rejects a draft with no mention of fossil fuels
-2. **Sea drones sink Russian warship** — Seven Ukrainian sea drones sank the corvette Merkury at Benghazi and hit a cargo ship carrying arms
+2. **Iran hits Bahrain site; tankers struck in Hormuz** — Bahrain says two were wounded in Saturday's strike on a civilian site in Sitra, as two tankers are hit in the Strait of Hormuz
 3. **Democrats win biggest House majority since 1992** — Chuck Hubbard beats Virginia Foxx by 330 votes after a recount in North Carolina
-4. **Iran hits Bahrain industrial site** — Bahrain says two were wounded in Saturday's strike on a civilian site in Sitra
+4. **US lead over China narrows to record low** — America scores 78.9 in the 2026 Asia Power Index, just 5.3 ahead of China at 73.6 — the smallest gap since 2018
 5. **BepiColombo reaches Mercury — with a glitch** — After an eight-year flight, the probe enters Mercury's orbit, but a thruster burn falls short
-6. **Drone strike levels flats near Kyiv** — A Shahed drone collapses a five-storey block in Dymer; 11 killed, a boy pulled alive from rubble
+6. **Alcaraz and Márquez crowned champions** — Alcaraz beats world No. 1 Zverev 6-2, 7-6(7) for his first ATP Finals title; Márquez seals his eighth MotoGP crown, tying Agostini
 
-Sources: Reuters, Associated Press, CNN, Al Jazeera, The Wall Street Journal, Kyiv Independent, Ukrinform, The Hindu — 22 Nov 2026. See `verification.md` for per-story verification.
+Sources: Reuters, Associated Press, CNN, Al Jazeera, The Hindu, SCMP, Xinhua — 22 Nov 2026. See `verification.md` for per-story verification.
 
 ## Run it
 
